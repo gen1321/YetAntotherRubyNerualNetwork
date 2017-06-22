@@ -1,11 +1,13 @@
-require 'layer'
+require_relative './layer'
+require_relative './neron.rb'
+require_relative './connection'
 class InputLayer < Layer
-  def initialize(values)
+  def initialize(batch_size)
     @neurons = []
-    values.each do |v|
+    (1..batch_size).each do
       n = Neuron.new
       @neurons.push(n)
-      Connection.new(value: v, end_neuron: n)
+      Connection.new(end_neuron: n)
     end
   end
 end
