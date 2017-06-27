@@ -2,12 +2,15 @@ require_relative './layer'
 require_relative './neron.rb'
 require_relative './connection'
 class InputLayer < Layer
+  attr_accessor :input_connections
+
   def initialize(batch_size)
     @neurons = []
+    @income_connections = []
+    @outcome_connections = []
     (1..batch_size).each do
-      n = Neuron.new
-      @neurons.push(n)
-      Connection.new(end_neuron: n)
+      neuron = Neuron.new
+      @neurons.push(neuron)
     end
   end
 end

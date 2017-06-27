@@ -4,11 +4,14 @@ require_relative './connection'
 
 class OutputLayer < Layer
   attr_accessor :result
-  def initialize(classes_size)
-    @neurons = (1..classes_size).map { Neuron.new }
+  def initialize(classes)
+    @classes = classes
+    @income_connections = []
+    @output_connections = []
+    @neurons = (1..classes).map { Neuron.new }
+  end
+
+  def process_all_neurons
+    @result = @neurons.map(&:process)
   end
 end
-
-# 0 -> 'white'
-# 0.5 -> 'gray'
-# 0.1 -> 'black'
