@@ -39,11 +39,11 @@ data.shuffle!
 
 x_data = []
 y_data = []
-train_size = 100
-test_size = 100
+train_size = 5000
+test_size = 10_000
 
 normalize = lambda do |val, from_low, from_high, to_low, to_high|
-  d = (val - from_low) * (to_high - to_low) / (from_high - from_low).to_f
+  (val - from_low) * (to_high - to_low) / (from_high - from_low).to_f
 end
 
 data.each do |row|
@@ -59,7 +59,7 @@ y_train = y_data.slice(0, train_size)
 x_test = x_data.slice(train_size, test_size)
 y_test = y_data.slice(train_size, test_size)
 
-net = Net.new([50], 28 * 28, ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'])
+net = Net.new([80], 28 * 28, %w[0 1 2 3 4 5 6 7 8 9])
 net.train_network(x_train, y_train)
 
 def one_hot_to_number(one_hot_array)
@@ -77,5 +77,6 @@ x_test.each_with_index do |test_data, index|
     wrong += 1
   end
 end
-p "CORRECT = #{correct}"
-p "WRONG = #{wrong}"
+
+p "WRONG #{wrong}"
+p "CORRECT #{correct}"

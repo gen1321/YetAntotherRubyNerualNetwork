@@ -10,8 +10,10 @@ class Net
   }.freeze
 
   def initialize(layers_representation, batch_size, classes)
-    @update_running = false
+    @on_update = 0
+    @update_after = 10
     @input_layer = InputLayer.new(batch_size)
+    @global_error = 1
     @output_layer = OutputLayer.new(classes.size)
     @classes = classes
     @layers = [@input_layer]
@@ -27,7 +29,9 @@ class Net
   def process(input)
     put_data_into_net(input)
     @layers[1..-1].each(&:process_all_neurons)
-    @layers[2].neurons.map(&:result)
+    @layers[1..-1].map do |l|
+      l.neurons.map(&:result)
+    end
     output = {}
     results = @output_layer.result
     @classes.each_with_index do |c, index|
@@ -40,7 +44,7 @@ class Net
     inputs.each_with_index do |input, index|
       process(input)
       @global_error = calculate_global_error(expected_output[index])
-      p "GLOBAL ERROR IS #{@global_error}, #{@output_layer.result} vs #{expected_output[index]}"
+      p "GLOBAL ERROR IS #{@global_error}, #{@output_layer.result.map { |x| x.round(5) }} vs #{expected_output[index]}"
       back_propogation(expected_output[index])
     end
   end
@@ -48,23 +52,36 @@ class Net
   private
 
   def back_propogation(expected_results)
-    calculate_deltas(expected_results)
-    connections.each do |connection|
-      connection.calculate_gradient
-      connection.calculate_delta_change
-      connection.update_weight
+    @output_layer.neurons.each_with_index do |neuron, index|
+      error = neuron.result - expected_results[index]
+      neuron.delta = -error * neuron.result
+      neuron.input_connections.each(&:calculate_gradient)
+      neuron.input_connections.each(&:calculate_delta_change)
+      neuron.input_connections.each(&:update_weight)
+    end
+    @layers[0..-1].reverse_each do |l|
+      l.neurons.each(&:calculate_delta)
+    end
+    @layers[1..-1].reverse_each do |l|
+      l.neurons.each do |n|
+        n.input_connections do |conn|
+          conn.calculate_gradient
+          conn.calculate_delta_change
+          conn.update_weight
+        end
+      end
     end
   end
 
-  def calculate_deltas(desired_results)
-    @output_layer.neurons.each_with_index do |neuron, index|
-      error = neuron.result - desired_results[index]
-      neuron.delta = -error * neuron.result
-    end
-    @layers[1..-2].reverse_each do |layer|
-      layer.neurons.each(&:calculate_delta)
-    end
-  end
+  # def calculate_deltas(desired_results)
+  #   @output_layer.neurons.each_with_index do |neuron, index|
+  #     error = neuron.result - desired_results[index]
+  #     neuron.delta = -error * neuron.result
+  #   end
+  #   @layers[1..-2].reverse_each do |layer|
+  #     layer.neurons.each(&:calculate_delta)
+  #   end
+  # end
 
   def calculate_global_error(expected_result)
     sum = 0
@@ -86,6 +103,10 @@ class Net
 
   def connections
     @layers.map(&:connections).compact.flatten
+  end
+
+  def network_result
+    @output_layer.result
   end
 
   def input_connections

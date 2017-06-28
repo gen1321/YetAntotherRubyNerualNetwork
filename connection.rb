@@ -6,8 +6,8 @@ class Connection
   attr_accessor :layer
   attr_accessor :gradient
 
-  LEARNING_RATE = 0.7
-  MOMENTUM = 0.3
+  LEARNING_RATE = 0.1
+  MOMENTUM = 0.5
 
   def initialize(params)
     @weight = (rand(200) / 100.0) - 1
@@ -29,6 +29,7 @@ class Connection
   def calculate_delta_change
     @delta_change = (LEARNING_RATE * @gradient) + (MOMENTUM * @delta_change)
     @gradient = 0
+    @delta_change
   end
 
   def update_weight
