@@ -14,7 +14,7 @@ First argument is shape of hiden layers. each element of array is represents lay
 
 Second argument is size of input layer. it should be equal to your input size.
 
-thrid shape of output. if we want our network to classify digits we should pass %w[0 1 2 3 4 5 6 7 8 9]. when you call process it will return  something like ['1' => 0.2, '2' => 0.8 ..]
+Thrid argument is shape of output. if we want our network to classify digits we should pass %w[0 1 2 3 4 5 6 7 8 9]. when you call process it will return  something like ['1' => 0.2, '2' => 0.8 ..]
 
 ```
 process([0,0,0,1,2,3,4])
