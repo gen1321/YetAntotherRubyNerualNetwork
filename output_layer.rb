@@ -1,5 +1,5 @@
 require_relative './layer'
-require_relative './neron.rb'
+require_relative './neuron.rb'
 require_relative './connection'
 
 class OutputLayer < Layer
