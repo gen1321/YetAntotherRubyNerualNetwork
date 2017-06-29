@@ -1,8 +1,6 @@
 class Neuron
   attr_accessor :input_connections
   attr_accessor :output_connections
-  attr_accessor :weight
-  attr_accessor :bias
   attr_accessor :result
   attr_accessor :delta
 

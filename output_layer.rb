@@ -4,6 +4,7 @@ require_relative './connection'
 
 class OutputLayer < Layer
   attr_accessor :result
+
   def initialize(classes)
     @classes = classes
     @income_connections = []

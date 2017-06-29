@@ -25,6 +25,18 @@ class Layer
     previous_layer.outcome_connections = @income_connections
   end
 
+  def train
+    neurons.each do |neuron|
+      neuron.input_connections.each(&:calculate_gradient)
+      neuron.input_connections.each(&:calculate_delta_change)
+      neuron.input_connections.each(&:update_weight)
+    end
+  end
+
+  def calculate_delta_for_neurons
+    neurons.each(&:calculate_delta)
+  end
+
   def process_all_neurons
     @neurons.each(&:process)
   end

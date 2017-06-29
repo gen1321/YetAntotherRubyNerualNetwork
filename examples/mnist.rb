@@ -39,7 +39,7 @@ data.shuffle!
 
 x_data = []
 y_data = []
-train_size = 50000
+train_size = 50_000
 test_size = 10_000
 
 normalize = lambda do |val, from_low, from_high, to_low, to_high|

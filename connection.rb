@@ -6,7 +6,7 @@ class Connection
   attr_accessor :layer
   attr_accessor :gradient
 
-  LEARNING_RATE = 0.1
+  LEARNING_RATE = 0.01
   MOMENTUM = 0.5
 
   def initialize(params)
