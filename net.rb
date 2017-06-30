@@ -40,6 +40,24 @@ class Net
     end
   end
 
+  def save_network(name)
+    f = File.open(name, 'w')
+    f.write(Marshal.dump(self))
+  end
+
+  def self.load_network(name)
+    f = File.read(name)
+    Marshal.load(f)
+  end
+
+  def marshal_dump
+    [@layers, @input_layer, @output_layer, @classes, @global_error]
+  end
+
+  def marshal_load(net)
+    @layers, @input_layer, @output_layer, @classes, @global_error = net
+  end
+
   private
 
   def back_propogation(expected_results)

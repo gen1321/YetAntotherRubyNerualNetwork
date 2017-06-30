@@ -40,7 +40,7 @@ data.shuffle!
 x_data = []
 y_data = []
 train_size = 50_000
-test_size = 10_000
+test_size = 1000
 
 normalize = lambda do |val, from_low, from_high, to_low, to_high|
   (val - from_low) * (to_high - to_low) / (from_high - from_low).to_f
@@ -59,9 +59,9 @@ y_train = y_data.slice(0, train_size)
 x_test = x_data.slice(train_size, test_size)
 y_test = y_data.slice(train_size, test_size)
 
-net = Net.new([90], 28 * 28, %w[0 1 2 3 4 5 6 7 8 9])
+net = Net.new([70], 28 * 28, %w[0 1 2 3 4 5 6 7 8 9])
+# net = Net.load_network('mnist_model.dump')
 net.train_network(x_train, y_train)
-
 def one_hot_to_number(one_hot_array)
   one_hot_array.find_index(1).to_s
 end
@@ -77,6 +77,6 @@ x_test.each_with_index do |test_data, index|
     wrong += 1
   end
 end
-
+net.save_network('mnist_model.dump')
 p "WRONG #{wrong}"
 p "CORRECT #{correct}"
